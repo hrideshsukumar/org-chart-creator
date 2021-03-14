@@ -4,6 +4,7 @@ const OrgChart = ({
     positions,
     getOrgChart,
     update,
+    edit,
     google
 }) => {
 
@@ -71,8 +72,8 @@ const OrgChart = ({
                 draggedNode.id !== dropNode.parentId
             ) {
                 update(
-                    parseInt(draggedNode.id, 10),
-                    parseInt(dropNode.id, 10),
+                    draggedNode.id,
+                    dropNode.id,
                 );
             }
         }
@@ -96,15 +97,22 @@ const OrgChart = ({
         }
     };
 
+    const editNode = event => {
+        let element = event.target.parentElement;
+        const node = getIds(element);
+        edit(node.id);
+    }
+
 
     const drawChart = () => {
         const template = p =>
             `
           <hidden data-id='${p.id}' />
           <hidden data-parent-id='${p.parentId}' />
-          <h6>
+          <h6>${p.name} </h6>
+          <h5 class="title">
             ${p.title} 
-          </h6>
+          </h5>
           `;
         const orgChartDiv = document.getElementById("org-chart");
         if (orgChartDiv) {
@@ -118,6 +126,10 @@ const OrgChart = ({
                         "google-visualization-orgchart-node",
                     );
                     Array.from(nodes).forEach(node => {
+                        const iconElement = document.createElement('i');
+                        iconElement.className = 'edit outline icon node-icon';
+                        iconElement.addEventListener('click', editNode)
+                        node.appendChild(iconElement);
                         node.setAttribute("draggable", "true");
                         node.addEventListener("dragstart", dragStart);
                         node.addEventListener("dragenter", dragEnter);
