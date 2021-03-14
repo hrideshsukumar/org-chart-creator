@@ -71,8 +71,8 @@ const OrgChart = ({
                 draggedNode.id !== dropNode.parentId
             ) {
                 update(
-                    parseInt(draggedNode.id, 10),
-                    parseInt(dropNode.id, 10),
+                    draggedNode.id,
+                    dropNode.id,
                 );
             }
         }
